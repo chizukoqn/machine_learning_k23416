@@ -12,7 +12,8 @@ try:
     cursor.execute(query)
 
     # Fetch and output result
-    df = pd.DataFrame(cursor.fetchall())
+    column_names = [description[0] for description in cursor.description]
+    df = pd.DataFrame(cursor.fetchall(), columns=column_names)
     print(df)
     # Close the cursor
     cursor.close()
