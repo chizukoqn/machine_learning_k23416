@@ -21,5 +21,8 @@ def find_order_with_range_and_sort(df, minValue, maxValue, SortType):
 df = pd.read_csv('../dataset/SalesTransactions/SalesTransactions.csv')
 minValue = float(input("Nhập giá trị min: "))
 maxValue = float(input("Nhập giá trị max: "))
-result = find_order_with_range_and_sort(df, minValue, maxValue, True)
+SortType = input('Bạn có muốn sắp xếp tăng dần không? y/n ')
+if SortType == 'y':
+    SortType = True
+result = find_order_with_range_and_sort(df, minValue, maxValue, SortType)
 print('Danh sách các hóa đơn trong phạm vi giá trị từ', minValue, 'đến', maxValue, 'và có sắp xếp là:', result)
