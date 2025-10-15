@@ -1,7 +1,8 @@
 from PyQt6.QtCore import Qt
-from PyQt6.QtWidgets import QTableWidgetItem
+from PyQt6.QtWidgets import QTableWidgetItem, QMessageBox
 
 from retail_project.connectors.employee_connector import EmployeeConnector
+from retail_project.model.employee import Employee
 from retail_project.uis.EmployeeMainWindow import Ui_MainWindow
 
 
@@ -45,6 +46,7 @@ class EmployeeMainWindowEx(Ui_MainWindow):
     def setupSignalAndSlot(self):
         self.pushButtonNew.clicked.connect(self.clearAll)
         self.tableWidgetEmployee.itemSelectionChanged.connect(self.show_detail)
+        self.pushButtonSave.clicked.connect(self.SaveEmp)
     def clearAll(self):
         self.lineEditEmpID.setText("")
         self.lineEditName.setText("")
@@ -69,8 +71,29 @@ class EmployeeMainWindowEx(Ui_MainWindow):
             self.lineEditName.setText(emp.Name)
             self.lineEditPhone.setText(str(emp.Phone))
             self.lineEditEmail.setText(str(emp.Email))
+            self.lineEditPassword.setText("")
 
             if emp.IsDeleted == 1:
                 self.checkBoxIsDeleted.setChecked(True)
             else:
                 self.checkBoxIsDeleted.setChecked(False)
+
+    def SaveEmp(self):
+        emp = Employee()
+        emp.EmployeeCode = self.lineEditCode.text()
+        emp.Name = self.lineEditName.text()
+        emp.Phone = self.lineEditPhone.text()
+        emp.Email = self.lineEditEmail.text()
+        emp.Password = self.lineEditPassword.text()
+        emp.IsDeleted = 0
+
+        result = self.ec.insertOneEmployee(emp)
+        if result > 0:
+            self.displayListEmployee()
+        else:
+            msg = QMessageBox()
+            msg.setIcon(QMessageBox.Icon.Critical)
+            msg.setText("Lưu hong được bạn ơi ~~~")
+            msg.setWindowTitle("Lưu lỗi tè le")
+            msg.setStandardButtons(QMessageBox.StandardButton.Ok)
+            msg.exec()

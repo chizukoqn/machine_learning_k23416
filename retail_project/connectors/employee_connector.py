@@ -69,3 +69,18 @@ class EmployeeConnector(Connector):
         val = (emp.EmployeeCode, emp.Name, emp.Phone, emp.Email, emp.Password, emp.IsDeleted)
         result = self.insert_one(sql, val)
         return result
+
+    def updateOneEmployee(self, emp):
+        sql = "UPDATE `employee` "\
+        "SET "\
+        "`EmployeeCode` = %s, "\
+        "`Name` = %s, "\
+        "`Phone` = %s, "\
+        "`Email` = %s, "\
+        "`Password` = %s, "\
+        "`IsDeleted` = %s "\
+        "WHERE `ID` = %s; "\
+
+        val = (emp.EmployeeCode, emp.Name, emp.Phone, emp.Email, emp.Password, emp.IsDeleted, emp.ID)
+        result = self.insert_one(sql, val)
+        return result
