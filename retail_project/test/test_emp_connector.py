@@ -8,3 +8,18 @@ if em == None:
 else:
     print("Login successfull!")
     print(em)
+
+#test get all emp
+print("List All Emp")
+ds = ec.get_all_employee()
+print(ds)
+for emp in ds:
+    print(emp)
+
+id = 3
+emp = ec.getDetailInfo(id)
+if emp == None:
+    print("Không có nhân viên naào có mã =", id)
+else:
+    print("Có")
+    print(emp)

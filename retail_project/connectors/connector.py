@@ -74,3 +74,22 @@ class Connector:
         except:
             traceback.print_exc()
         return None
+
+    def fetchall(self, sql, val):
+        try:
+            cursor = self.conn.cursor()
+            cursor.execute(sql, val)
+            datasets = cursor.fetchall()
+            cursor.close()
+            return datasets
+        except:
+            traceback.print_exc()
+        return None
+
+    def insert_one(self, sql, val):
+        cursor = self.conn.cursor()
+        cursor.execute(sql, val)
+        self.conn.commit()
+        result = cursor.rowcount
+        cursor.close()
+        return result
