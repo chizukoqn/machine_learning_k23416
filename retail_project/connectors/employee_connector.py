@@ -84,3 +84,9 @@ class EmployeeConnector(Connector):
         val = (emp.EmployeeCode, emp.Name, emp.Phone, emp.Email, emp.Password, emp.IsDeleted, emp.ID)
         result = self.insert_one(sql, val)
         return result
+
+    def deletedOneEmployee(self, emp):
+        sql = "DELETE FROM `employee` where ID = %s"
+        val = (emp.ID, )
+        result = self.insert_one(sql, val)
+        return result

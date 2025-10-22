@@ -10,10 +10,12 @@ class EmployeeMainWindowEx(Ui_MainWindow):
     def __init__(self):
         self.ec = EmployeeConnector()
         self.ec.connect()
+        self.is_completed = False
     def setupUi(self, MainWindow):
         super().setupUi(MainWindow)
         self.MainWindow = MainWindow
         self.displayListEmployee()
+        self.is_completed = True
         self.setupSignalAndSlot()
     def showWindow(self):
         self.MainWindow.show()
@@ -47,6 +49,8 @@ class EmployeeMainWindowEx(Ui_MainWindow):
         self.pushButtonNew.clicked.connect(self.clearAll)
         self.tableWidgetEmployee.itemSelectionChanged.connect(self.show_detail)
         self.pushButtonSave.clicked.connect(self.SaveEmp)
+        self.pushButtonUpdate.clicked.connect(self.Update_emp)
+        self.pushButtonDeleted.clicked.connect(self.Deleted_emp)
     def clearAll(self):
         self.lineEditEmpID.setText("")
         self.lineEditName.setText("")
@@ -57,6 +61,8 @@ class EmployeeMainWindowEx(Ui_MainWindow):
         self.lineEditCode.setFocus()
 
     def show_detail(self):
+        if self.is_completed == False:
+            return
         row_index = self.tableWidgetEmployee.currentIndex()
         print("click", row_index.row())
 
@@ -79,6 +85,7 @@ class EmployeeMainWindowEx(Ui_MainWindow):
                 self.checkBoxIsDeleted.setChecked(False)
 
     def SaveEmp(self):
+        self.is_completed = False
         emp = Employee()
         emp.EmployeeCode = self.lineEditCode.text()
         emp.Name = self.lineEditName.text()
@@ -97,3 +104,45 @@ class EmployeeMainWindowEx(Ui_MainWindow):
             msg.setWindowTitle("Lưu lỗi tè le")
             msg.setStandardButtons(QMessageBox.StandardButton.Ok)
             msg.exec()
+        self.is_completed = True
+    def Update_emp(self):
+        self.is_completed = False
+        emp = Employee()
+        emp.ID = self.lineEditEmpID.text()
+        emp.EmployeeCode = self.lineEditCode.text()
+        emp.Name = self.lineEditName.text()
+        emp.Phone = self.lineEditPhone.text()
+        emp.Email = self.lineEditEmail.text()
+        emp.Password = self.lineEditPassword.text()
+        if self.checkBoxIsDeleted.isChecked() == True:
+            emp.IsDeleted = 1
+        else:
+            emp.IsDeleted = 0
+
+        result = self.ec.updateOneEmployee(emp)
+        if result > 0:
+            self.displayListEmployee()
+        else:
+            msg = QMessageBox()
+            msg.setIcon(QMessageBox.Icon.Critical)
+            msg.setText("Không cập nhật được ~~~")
+            msg.setWindowTitle("Lưu lỗi tè le")
+            msg.setStandardButtons(QMessageBox.StandardButton.Ok)
+            msg.exec()
+        self.is_completed = True
+
+    def Deleted_emp(self):
+        self.is_completed = False
+        emp = Employee()
+        emp.ID = self.lineEditEmpID.text()
+        result = self.ec.deletedOneEmployee(emp)
+        if result > 0:
+            self.displayListEmployee()
+        else:
+            msg = QMessageBox()
+            msg.setIcon(QMessageBox.Icon.Critical)
+            msg.setText("Không xóa được ~~~")
+            msg.setWindowTitle("Lưu lỗi tè le")
+            msg.setStandardButtons(QMessageBox.StandardButton.Ok)
+            msg.exec()
+        self.is_completed = True
