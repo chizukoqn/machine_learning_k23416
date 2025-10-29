@@ -124,7 +124,7 @@ def visualizeKMeans(X, y_kmeans, cluster, title, xlabel, ylabel, colors):
 # visualizeKMeans(X, y_kmeans, cluster, "Clusters of Customers - Age X Spending Score", 'Age', "Spending Score", colors)
 
 columns = ['Annual Income', 'Spending Score']
-elbowMethod(df2, columns)
+# elbowMethod(df2, columns)
 
 X = df2.loc[:, columns].values
 cluster = 5
@@ -164,3 +164,76 @@ def visualize3DKmeans(df, columns, hover_data, cluster):
     fig.show()
 hover_data = df2.columns
 visualize3DKmeans(df2, columns, hover_data, cluster)
+
+def showCustomerDetailsConsole(conn, df_clustered):
+    cursor = conn.cursor()
+    for cluster_id in sorted(df_clustered['cluster'].unique()):
+        print(f"\n===== Cụm {cluster_id} =====")
+
+        customer_ids = df_clustered[df_clustered['cluster'] == cluster_id]['CustomerId'].tolist()
+        if not customer_ids:
+            print("Không có khách hàng trong cụm này.")
+            continue
+
+
+        format_ids = ', '.join([str(i) for i in customer_ids])
+        sql = f"SELECT * FROM customer WHERE CustomerId IN ({format_ids})"
+        cursor.execute(sql)
+        rows = cursor.fetchall()
+
+        for row in rows:
+            print(row)
+
+# Xuất ra console
+showCustomerDetailsConsole(conn, df2)
+
+
+from flask import render_template_string
+
+@app.route('/clusters')
+def showCustomerDetailsWeb():
+    cursor = conn.cursor()
+    cluster_data = {}
+
+    for cluster_id in sorted(df2['cluster'].unique()):
+        customer_ids = df2[df2['cluster'] == cluster_id]['CustomerId'].tolist()
+        if not customer_ids:
+            continue
+        format_ids = ', '.join([str(i) for i in customer_ids])
+        sql = f"SELECT * FROM customer WHERE CustomerId IN ({format_ids})"
+        cursor.execute(sql)
+        rows = cursor.fetchall()
+        cols = [desc[0] for desc in cursor.description]
+        df_customers = pd.DataFrame(rows, columns=cols)
+        cluster_data[cluster_id] = df_customers.to_html(index=False, classes='table table-bordered table-striped')
+
+    html_template = """
+    <html>
+    <head>
+        <title>Customer Clusters</title>
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css">
+    </head>
+    <body class="p-4">
+        <h2 class="mb-4">Danh sách chi tiết Customer theo từng cụm</h2>
+        {% for cluster_id, table_html in cluster_data.items() %}
+            <h4 class="mt-4">Cụm {{ cluster_id }}</h4>
+            {{ table_html|safe }}
+        {% endfor %}
+    </body>
+    </html>
+    """
+    return render_template_string(html_template, cluster_data=cluster_data)
+import webbrowser
+from threading import Timer
+
+if __name__ == '__main__':
+    url = "http://127.0.0.1:5000/clusters"
+    print(f"\nFlask app is running at {url}")
+
+    def open_browser():
+        webbrowser.open_new(url)
+
+    Timer(1, open_browser).start()  # mở sau 1 giây
+
+    app.run(debug=False)  # tắt debug để tránh reload 2 lần
+
