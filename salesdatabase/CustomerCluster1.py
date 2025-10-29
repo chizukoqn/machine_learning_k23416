@@ -4,6 +4,7 @@ import pandas as pd
 import matplotlib.pyplot as plt
 import seaborn as sns
 import plotly.express as px
+from matplotlib.pyplot import margins
 from sklearn.cluster import KMeans
 import numpy as np
 app = Flask(__name__)
@@ -36,7 +37,7 @@ conn = getConnect('localhost', 3306, 'salesdatabase','root', '123456')
 
 sql1 = "select * from customer"
 df1 = queryDataset(conn, sql1)
-print(df1)
+# print(df1)
 
 sql2 = "select distinct customer.CustomerId, Age, Annual_Income, Spending_Score " \
     "from customer, customer_spend_score " \
@@ -45,11 +46,11 @@ sql2 = "select distinct customer.CustomerId, Age, Annual_Income, Spending_Score 
 df2 = queryDataset(conn, sql2)
 df2.columns = ['CustomerId', 'Age', 'Annual Income', 'Spending Score']
 
-print(df2)
-
-print(df2.head())
-
-print(df2.describe())
+# print(df2)
+#
+# print(df2.head())
+#
+# print(df2.describe())
 
 def showHistogram(df, columns):
     plt.figure(1, figsize=(7, 8))
@@ -62,7 +63,7 @@ def showHistogram(df, columns):
         plt.title(f'Histogram of {column}')
     plt.show()
 
-showHistogram(df2, df2.columns[1:])
+# showHistogram(df2, df2.columns[1:])
 
 def elbowMethod(df, colunmsForElbow):
     X = df.loc[:, colunmsForElbow].values
@@ -83,7 +84,8 @@ def elbowMethod(df, colunmsForElbow):
     plt.show()
 
 columns=['Age', 'Spending Score']
-elbowMethod(df2, columns)
+# elbowMethod(df2, columns)
+
 def runKMeans(X, cluster):
     model = KMeans(n_clusters=cluster,
                    init='k-means++',
@@ -99,10 +101,10 @@ cluster = 4
 colors = ['red', 'green', 'blue', 'purple', 'black','pink','orange']
 
 y_kmeans, centroids, labels = runKMeans(X, cluster)
-print(y_kmeans)
-print(centroids)
-print(labels)
-df2['cluster']=labels
+# print(y_kmeans)
+# print(centroids)
+# print(labels)
+# df2['cluster']=labels
 
 
 def visualizeKMeans(X, y_kmeans, cluster, title, xlabel, ylabel, colors):
@@ -119,4 +121,46 @@ def visualizeKMeans(X, y_kmeans, cluster, title, xlabel, ylabel, colors):
     plt.legend()
     plt.show()
 
-visualizeKMeans(X, y_kmeans, cluster, "Clusters of Customers - Age X Spending Score", 'Age', "Spending Score", colors)
+# visualizeKMeans(X, y_kmeans, cluster, "Clusters of Customers - Age X Spending Score", 'Age', "Spending Score", colors)
+
+columns = ['Annual Income', 'Spending Score']
+elbowMethod(df2, columns)
+
+X = df2.loc[:, columns].values
+cluster = 5
+
+y_kmeans, centroids, labels = runKMeans(X, cluster)
+
+# print(y_kmeans)
+# print(centroids)
+# print(labels)
+df2['cluster'] = labels
+
+# visualizeKMeans(X, y_kmeans, cluster, "Clusters of Customers - Annual Incom X Spending Score", 'Annual Income', "Spending Score", colors)
+
+columns = ['Age', 'Annual Income', 'Spending Score']
+# elbowMethod(df2, columns)
+
+X = df2.loc[:, columns].values
+cluster = 6
+
+y_kmeans, centroids, labels = runKMeans(X, cluster)
+
+# print(y_kmeans)
+# print(centroids)
+# print(labels)
+df2['cluster'] = labels
+
+def visualize3DKmeans(df, columns, hover_data, cluster):
+    fig = px.scatter_3d(df,
+                        x = columns[0],
+                        y = columns[1],
+                        z = columns[2],
+                        color = 'cluster',
+                        hover_data= hover_data,
+                        category_orders={'cluster': range(0, cluster)},
+                        )
+    fig.update_layout(margin=dict(l=0, r=0, b = 0, t = 0))
+    fig.show()
+hover_data = df2.columns
+visualize3DKmeans(df2, columns, hover_data, cluster)

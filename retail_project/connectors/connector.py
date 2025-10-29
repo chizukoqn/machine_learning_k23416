@@ -11,23 +11,9 @@ class Connector:
         self.username=username
         self.password=password
 
-    def connect(self):
-        try:
-            self.conn = pymysql.connect(
-                host=self.server,
-                port=self.port,
-                database=self.database,
-                user=self.username,
-                password=self.password)
-            return self.conn
-        except:
-            self.conn=None
-            traceback.print_exc()
-        return None
-
     # def connect(self):
     #     try:
-    #         self.conn = mysql.connector.connect(
+    #         self.conn = pymysql.connect(
     #             host=self.server,
     #             port=self.port,
     #             database=self.database,
@@ -38,6 +24,21 @@ class Connector:
     #         self.conn=None
     #         traceback.print_exc()
     #     return None
+
+    def connect(self):
+        try:
+            self.conn = mysql.connector.connect(
+                host=self.server,
+                port=self.port,
+                database=self.database,
+                user=self.username,
+                password=self.password,
+                 use_pure=True)
+            return self.conn
+        except:
+            self.conn=None
+            traceback.print_exc()
+        return None
 
     def disConnect(self):
         if self.conn != None:
