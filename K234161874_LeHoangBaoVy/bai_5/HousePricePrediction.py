@@ -99,7 +99,7 @@ class Ui_MainWindow(object):
 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
-        MainWindow.setWindowTitle(_translate("MainWindow", "House Price Prediction - Han Lai"))
+        MainWindow.setWindowTitle(_translate("MainWindow", "House Price Prediction"))
         self.label.setText(_translate("MainWindow", "<html><head/><body><p align=\"center\"><span style=\" font-size:16pt; font-weight:600;\">House Price Prediction App</span></p></body></html>"))
         self.groupBox.setTitle(_translate("MainWindow", "Information:"))
         self.label_7.setText(_translate("MainWindow", "Prediction Price:  "))

@@ -34,6 +34,7 @@ for item in dataset:
 
 cursor.close()
 
+"""
 print("-"*10)
 print("(2.2) Truy vấn các Sinh viên có độ tuổi từ 22 tới 26:")
 cursor = conn.cursor()
@@ -264,3 +265,4 @@ cursor.execute(sql, val)
 conn.commit()
 
 print(cursor.rowcount," record(s) affected")
+"""
