@@ -12,7 +12,7 @@ from PyQt6 import QtCore, QtGui, QtWidgets
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
-        MainWindow.resize(730, 852)
+        MainWindow.resize(884, 852)
         icon = QtGui.QIcon()
         icon.addPixmap(QtGui.QPixmap("D:\\2025_2026\\se1\\machine\\ML_K23416\\MLBAProject\\UI\\../Images/ic_logo.jpg"), QtGui.QIcon.Mode.Normal, QtGui.QIcon.State.Off)
         MainWindow.setWindowIcon(icon)
@@ -286,7 +286,7 @@ class Ui_MainWindow(object):
         self.verticalLayout_2.addWidget(self.tabWidget)
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QtWidgets.QMenuBar(parent=MainWindow)
-        self.menubar.setGeometry(QtCore.QRect(0, 0, 730, 18))
+        self.menubar.setGeometry(QtCore.QRect(0, 0, 884, 26))
         self.menubar.setObjectName("menubar")
         self.menuSystem = QtWidgets.QMenu(parent=self.menubar)
         self.menuSystem.setAutoFillBackground(False)

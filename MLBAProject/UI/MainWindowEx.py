@@ -12,12 +12,12 @@ import seaborn as sns
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib.backends.backend_qt5agg import NavigationToolbar2QT as NavigationToolbar
 
-from Connectors.Connector import Connector
-from Models.PurchaseLinearRegression import PurchaseLinearRegression
-from Models.PurchaseStatistic import PurchaseStatistic
-from UI.ChartHandle import ChartHandle
-from UI.DatabaseConnectEx import DatabaseConnectEx
-from UI.MainWindow import Ui_MainWindow
+from MLBAProject.Connectors.Connector import Connector
+from MLBAProject.Models.PurchaseMLModel import PurchaseMLModel
+from MLBAProject.Models.PurchaseStatistic import PurchaseStatistic
+from MLBAProject.UI.ChartHandle import ChartHandle
+from MLBAProject.UI.DatabaseConnectEx import DatabaseConnectEx
+from MLBAProject.UI.MainWindow import Ui_MainWindow
 import traceback
 
 
@@ -33,7 +33,7 @@ import random
 
 class MainWindowEx(Ui_MainWindow):
     def __init__(self):
-        self.purchaseLinearRegression = PurchaseLinearRegression()
+        self.purchaseLinearRegression = PurchaseMLModel()
         self.databaseConnectEx=DatabaseConnectEx()
         self.databaseConnectEx.parent=self
         self.chartHandle= ChartHandle()
