@@ -15,9 +15,7 @@ class EmployeeConnector(Connector):
                        dataset[1],
                        dataset[2],
                        dataset[3],
-                       dataset[4],
-                       dataset[5],
-                       dataset[6])
+                       dataset[4])
         return emp
 
     def get_all_employee(self):
@@ -30,15 +28,13 @@ class EmployeeConnector(Connector):
                            dataset[1],
                            dataset[2],
                            dataset[3],
-                           dataset[4],
-                           dataset[5],
-                           dataset[6])
+                           dataset[4])
             employee.append(emp)
         return employee
 
     def getDetailInfo(self, ID):
         sql = "SELECT * FROM employee " \
-              "where ID = %s"
+              "where EmployeeID = %s"
         val = (ID, )
 
         dataset = self.fetchone(sql, val)
@@ -48,45 +44,37 @@ class EmployeeConnector(Connector):
                        dataset[1],
                        dataset[2],
                        dataset[3],
-                       dataset[4],
-                       dataset[5],
-                       dataset[6])
+                       dataset[4])
         return emp
 
     def insertOneEmployee(self, emp):
-        sql = "INSERT " \
-        "INTO " \
-        " `employee` " \
-        "( " \
-        "    `EmployeeCode`, " \
-        "    `Name`, " \
-        "    `Phone`, " \
-        "    `Email`, " \
-        "    `Password`, " \
-        "    `IsDeleted`) " \
-        "VALUES (%s, %s, %s, %s, %s, %s) "
+        sql = "UPDATE `employee` " \
+              "SET " \
+              "`Name` = %s, " \
+              "`Email` = %s, " \
+              "`Password` = %s, " \
+              "`Role` = %s " \
+              "WHERE `EmployeeID` = %s; "\
 
-        val = (emp.EmployeeCode, emp.Name, emp.Phone, emp.Email, emp.Password, emp.IsDeleted)
+        val = (emp.Name, emp.Email, emp.Password, emp.Role, emp.ID)
         result = self.insert_one(sql, val)
         return result
 
     def updateOneEmployee(self, emp):
         sql = "UPDATE `employee` "\
         "SET "\
-        "`EmployeeCode` = %s, "\
         "`Name` = %s, "\
-        "`Phone` = %s, "\
         "`Email` = %s, "\
         "`Password` = %s, "\
-        "`IsDeleted` = %s "\
-        "WHERE `ID` = %s; "\
+        "`Role` = %s "\
+        "WHERE `EmployeeID` = %s; "\
 
-        val = (emp.EmployeeCode, emp.Name, emp.Phone, emp.Email, emp.Password, emp.IsDeleted, emp.ID)
+        val = (emp.Name, emp.Email, emp.Password, emp.Role, emp.ID)
         result = self.insert_one(sql, val)
         return result
 
     def deletedOneEmployee(self, emp):
-        sql = "DELETE FROM `employee` where ID = %s"
+        sql = "DELETE FROM `employee` where EmployeeID = %s"
         val = (emp.ID, )
         result = self.insert_one(sql, val)
         return result

@@ -1,9 +1,10 @@
 #python -m pip install mysql-connector-python
 import mysql.connector
 import traceback
+import pymysql
 import pandas as pd
 class Connector:
-    def __init__(self,server="localhost", port=3306, database="k23416_retail", username="root", password="123456"):
+    def __init__(self,server="localhost", port=3306, database="um3la", username="root", password="123456"):
         self.server=server
         self.port=port
         self.database=database
